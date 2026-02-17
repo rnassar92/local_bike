@@ -1,0 +1,112 @@
+version: 2
+
+models:
+  - name: stg_brands__local_bike
+    description: "Marques de vélos référencées"
+    columns:
+      - name: brand_id
+        tests: [unique, not_null]
+
+  - name: stg_categories__local_bike
+    description: "Catégories de vélos (Children, Comfort, Cruisers, Cyclocross, Electric, Mountain, Road)"
+    columns:
+      - name: category_id
+        tests: [unique, not_null]
+
+  - name: stg_customers__local_bike
+    description: "Clients Local Bike"
+    columns:
+      - name: customer_id
+        tests: [unique, not_null]
+      - name: state
+        tests:
+          - accepted_values:
+              values: ['NY', 'CA', 'TX']
+
+  - name: stg_orders__local_bike
+    description: "Commandes avec statut normalisé (Pending/Processing/Rejected/Completed)"
+    columns:
+      - name: order_id
+        tests: [unique, not_null]
+      - name: customer_id
+        tests:
+          - relationships:
+              to: ref('stg_customers__local_bike')
+              field: customer_id
+      - name: store_id
+        tests:
+          - relationships:
+              to: ref('stg_stores__local_bike')
+              field: store_id
+      - name: staff_id
+        tests:
+          - relationships:
+              to: ref('stg_staffs__local_bike')
+              field: staff_id
+      - name: order_status
+        tests:
+          - accepted_values:
+              values: ['Pending', 'Processing', 'Rejected', 'Completed']
+
+  - name: stg_order_items__local_bike
+    description: "Lignes de commande avec calcul du revenu net (après discount)"
+    columns:
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('stg_orders__local_bike')
+              field: order_id
+      - name: product_id
+        tests:
+          - relationships:
+              to: ref('stg_products__local_bike')
+              field: product_id
+      - name: line_revenue
+        description: "quantity * list_price * (1 - discount)"
+
+  - name: stg_products__local_bike
+    description: "Catalogue produits Local Bike (321 vélos)"
+    columns:
+      - name: product_id
+        tests: [unique, not_null]
+      - name: brand_id
+        tests:
+          - relationships:
+              to: ref('stg_brands__local_bike')
+              field: brand_id
+      - name: category_id
+        tests:
+          - relationships:
+              to: ref('stg_categories__local_bike')
+              field: category_id
+
+  - name: stg_staffs__local_bike
+    description: "Employés des magasins avec hiérarchie managériale"
+    columns:
+      - name: staff_id
+        tests: [unique, not_null]
+      - name: store_id
+        tests:
+          - relationships:
+              to: ref('stg_stores__local_bike')
+              field: store_id
+
+  - name: stg_stocks__local_bike
+    description: "Niveaux de stock par magasin"
+    columns:
+      - name: store_id
+        tests:
+          - relationships:
+              to: ref('stg_stores__local_bike')
+              field: store_id
+      - name: product_id
+        tests:
+          - relationships:
+              to: ref('stg_products__local_bike')
+              field: product_id
+
+  - name: stg_stores__local_bike
+    description: "Les 3 magasins Local Bike : Santa Cruz (CA), Baldwin (NY), Rowlett (TX)"
+    columns:
+      - name: store_id
+        tests: [unique, not_null]

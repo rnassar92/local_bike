@@ -1,0 +1,25 @@
+version: 2
+
+sources:
+  - name: local_bike
+    description: "Données brutes Local Bike importées depuis les fichiers CSV"
+    schema: local_bike
+    tables:
+      - name: brands
+        description: "Marques de vélos"
+      - name: categories
+        description: "Catégories de vélos"
+      - name: customers
+        description: "Clients"
+      - name: order_items
+        description: "Lignes de commande"
+      - name: orders
+        description: "Commandes"
+      - name: products
+        description: "Produits (vélos)"
+      - name: staffs
+        description: "Employés des magasins"
+      - name: stocks
+        description: "Niveaux de stock par magasin et produit"
+      - name: stores
+        description: "Magasins Local Bike"

@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: mart_sales_overview__local_bike
+    description: >
+      Vue d'ensemble des ventes complétées. Grain : une commande.
+    columns:
+      - name: order_id
+        tests: [unique, not_null]
+      - name: order_revenue
+        description: "Revenu net de la commande (somme des line_revenue)"
+      - name: is_late
+        description: "1 si livré après la date requise, 0 sinon"
+
+  - name: mart_product_performance__local_bike
+    description: >
+      Performance des produits : revenu, unités vendues, stock restant, couverture.
+    columns:
+      - name: product_id
+        tests: [unique, not_null]
+      - name: weeks_of_stock
+        description: "Semaines de couverture stock restant au rythme de vente actuel"
+
+  - name: mart_store_performance__local_bike
+    description: >
+      Performance par magasin : revenu, AOV, taux de rejet, livraison, stock.
+    columns:
+      - name: store_id
+        tests: [unique, not_null]
+      - name: rejection_rate
+        description: "% de commandes rejetées"
+      - name: late_delivery_rate
+        description: "% de commandes livrées en retard"
+      - name: revenue_per_staff
+        description: "Revenu par employé actif"
